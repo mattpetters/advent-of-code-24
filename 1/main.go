@@ -9,12 +9,12 @@ import (
 	"strings"
 )
 
-// advent of code day one
-func main() {
+func getDataSetFromFile() ([]int, []int) {
+
 	data, err := os.ReadFile("./1/input.txt")
 	if err != nil {
 		fmt.Println("File reading error", err)
-		return
+		return nil, nil
 	}
 
 	leftList := []int{}
@@ -49,6 +49,11 @@ func main() {
 		rightList = append(rightList, right)
 	}
 
+	return leftList, rightList
+}
+
+func partOne() {
+	leftList, rightList := getDataSetFromFile()
 	slices.Sort(leftList)
 	slices.Sort(rightList)
 
@@ -58,5 +63,36 @@ func main() {
 		distance += int(math.Abs(diff))
 	}
 
+	fmt.Println("Day One")
 	fmt.Println("Distance:", distance)
+}
+
+// advent of code day two
+func partTwo() {
+
+	leftList, rightList := getDataSetFromFile()
+	rightMap := make(map[int]int)
+	for _, right := range rightList {
+		if _, ok := rightMap[right]; ok {
+			rightMap[right]++
+		} else {
+			rightMap[right] = 1
+		}
+	}
+
+	similarityScore := 0
+	for _, left := range leftList {
+		if count, ok := rightMap[left]; ok {
+			similarityScore += left * count
+		}
+	}
+
+	fmt.Println("Day Two")
+	fmt.Println("Similarity Score:", similarityScore)
+}
+
+// advent of code day one
+func main() {
+	partOne()
+	partTwo()
 }
